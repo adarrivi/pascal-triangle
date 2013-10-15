@@ -24,6 +24,7 @@ public class PascalTriangleTest {
 	private int row;
 	private int index;
 	private double element;
+	private int intResult;
 
 	@BeforeClass
 	public static void setUpTriangle() {
@@ -109,6 +110,106 @@ public class PascalTriangleTest {
 		givenRowAndIndex(6, 5);
 		whenGetElementByRowAndIndex();
 		thenElementShouldBeCorrect();
+	}
+
+	@Test
+	public void getElementSumByRow_NegativeRow_ThrowEx() {
+		expectInvalidTriangleEx();
+		givenRow(-1);
+		whenGetElementSumByRow();
+	}
+
+	private void givenRow(int givenRow) {
+		row = givenRow;
+	}
+
+	private void whenGetElementSumByRow() {
+		intResult = victim.getElementSumByRow(row);
+	}
+
+	@Test
+	public void getElementSumByRow_ZeroRow_ThrowEx() {
+		expectInvalidTriangleEx();
+		givenRow(0);
+		whenGetElementSumByRow();
+	}
+
+	@Test
+	public void getElementSumByRow_Row1_Returns1() {
+		givenRow(1);
+		whenGetElementSumByRow();
+		thenIntResultShouldBe(1);
+	}
+
+	private void thenIntResultShouldBe(int expectedResult) {
+		Assert.assertTrue(expectedResult == intResult);
+	}
+
+	@Test
+	public void getElementSumByRow_Row2_Returns2() {
+		givenRow(2);
+		whenGetElementSumByRow();
+		thenIntResultShouldBe(2);
+	}
+
+	@Test
+	public void getElementSumByRow_Row3_Returns4() {
+		givenRow(3);
+		whenGetElementSumByRow();
+		thenIntResultShouldBe(4);
+	}
+
+	@Test
+	public void getElementSumByRow_Row8_Returns128() {
+		givenRow(8);
+		whenGetElementSumByRow();
+		thenIntResultShouldBe(128);
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_NegativeRow_ThrowEx() {
+		expectInvalidTriangleEx();
+		givenRow(-1);
+		whenGetAggregatedNumberOfItemsUntilRow();
+	}
+
+	private void whenGetAggregatedNumberOfItemsUntilRow() {
+		intResult = victim.getAggregatedNumberOfItemsUntilRow(row);
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_ZeroRow_ThrowEx() {
+		expectInvalidTriangleEx();
+		givenRow(0);
+		whenGetAggregatedNumberOfItemsUntilRow();
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_Row1_Returns1() {
+		givenRow(1);
+		whenGetAggregatedNumberOfItemsUntilRow();
+		thenIntResultShouldBe(1);
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_Row2_Returns3() {
+		givenRow(2);
+		whenGetAggregatedNumberOfItemsUntilRow();
+		thenIntResultShouldBe(3);
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_Row3_Returns6() {
+		givenRow(3);
+		whenGetAggregatedNumberOfItemsUntilRow();
+		thenIntResultShouldBe(6);
+	}
+
+	@Test
+	public void getAggregatedNumberOfItemsUntilRow_Row6_Returns20() {
+		givenRow(6);
+		whenGetAggregatedNumberOfItemsUntilRow();
+		thenIntResultShouldBe(21);
 	}
 
 }

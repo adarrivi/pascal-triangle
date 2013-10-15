@@ -53,4 +53,22 @@ public class PascalTriangle {
 		}
 	}
 
+	public int getElementSumByRow(int row) {
+		assertNotZeroNegativeRow(row);
+		return MathUtils.pow(2, row - 1);
+	}
+
+	public int getAggregatedNumberOfItemsUntilRow(int row) {
+		assertNotZeroNegativeRow(row);
+		return summatoryOneTillValue(row);
+	}
+
+	private int summatoryOneTillValue(int value) {
+		int result = 0;
+		for (int i = 1; i <= value; i++) {
+			result += i;
+		}
+		return result;
+	}
+
 }

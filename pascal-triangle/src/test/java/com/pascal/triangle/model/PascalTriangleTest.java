@@ -4,18 +4,25 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.pascal.triangle.model.exception.InvalidTriangleException;
 
 public class PascalTriangleTest {
 
+	private static final Logger LOG = LoggerFactory
+			.getLogger(AlgorithmPascalTriangle.class);
+
 	private static Map<Integer, List<Double>> PASCAL_TRIANGLE;
+	private static final int HUMAN_WEIGHT = 50;
 
 	private PascalTriangle victim = PascalTriangle.getInstance();
 	@Rule
@@ -25,6 +32,7 @@ public class PascalTriangleTest {
 	private int index;
 	private double element;
 	private int intResult;
+	private Map<Integer, List<Double>> pyramidMap;
 
 	@BeforeClass
 	public static void setUpTriangle() {
@@ -212,4 +220,36 @@ public class PascalTriangleTest {
 		thenIntResultShouldBe(21);
 	}
 
+	@Test
+	public void algorithmPyramid_SameResutlsThanPascalTriangleFormula() {
+		givenAlgorithmPyramid(10);
+		verifyPyramidMapWithPascalFormula();
+	}
+
+	private void givenAlgorithmPyramid(int pyramidSize) {
+		AlgorithmPascalTriangle algorithm = new AlgorithmPascalTriangle(
+				pyramidSize, HUMAN_WEIGHT);
+		pyramidMap = algorithm.getWeightOnTheBackPyramidMap();
+	}
+
+	private void verifyPyramidMapWithPascalFormula() {
+		for (Entry<Integer, List<Double>> entry : pyramidMap.entrySet()) {
+			Integer levelIndex = entry.getKey();
+			List<Double> pyramidLevel = entry.getValue();
+			for (int columnIndex = 0; columnIndex < pyramidLevel.size(); columnIndex++) {
+				thenVictimShouldGiveSameWeight(levelIndex.intValue(),
+						columnIndex, pyramidLevel.get(columnIndex));
+			}
+		}
+
+	}
+
+	private void thenVictimShouldGiveSameWeight(int rowIndex, int columnIndex,
+			double expectedWeight) {
+		Assert.assertEquals(
+				expectedWeight,
+				HUMAN_WEIGHT
+						* victim.getWeigthShareOverShoulders(rowIndex,
+								columnIndex), 0);
+	}
 }

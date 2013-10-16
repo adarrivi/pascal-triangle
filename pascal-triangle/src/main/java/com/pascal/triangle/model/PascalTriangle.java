@@ -71,4 +71,15 @@ public class PascalTriangle {
 		return result;
 	}
 
+	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex) {
+		double summatory = 0;
+		for (int i = 0; i <= columnIndex; i++) {
+			summatory += MathUtils.binomialCoefficientDouble(rowIndex + 2, i)
+					* (1 + columnIndex - i);
+		}
+		double weightShare = 1 + 2 * columnIndex
+				- (summatory / MathUtils.pow(2, rowIndex));
+		return weightShare;
+	}
+
 }

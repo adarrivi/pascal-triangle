@@ -11,6 +11,7 @@
 		<junit.version>4.11</junit.version>
 		<org.slf4j.version>1.7.5</org.slf4j.version>
 		<org.apache.commons.math.version>2.2</org.apache.commons.math.version>
+		<com.google.guava.version>15.0</com.google.guava.version>
 	</properties>
 
 	<dependencies>
@@ -20,8 +21,13 @@
 			<artifactId>commons-math</artifactId>
 			<version>${org.apache.commons.math.version}</version>
 		</dependency>
-
-
+		
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>${com.google.guava.version}</version>
+		</dependency>
+		
 		<!-- Logging -->
 		<dependency>
 			<groupId>org.slf4j</groupId>

@@ -1,44 +1,27 @@
 package com.pascal.triangle.model;
 
+import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
+
 public class HumanPyramid {
 
 	private static final int EDGE_INDEX = 0;
-	private PascalTriangle pascalTriangle = PascalTriangle.getInstance();
+	private WeightPascalTriangle weightPascalTriangle;
 	private int humanWeight;
-	private int level;
-	private double aggregatedWeightBefore;
-	private int humansSharingWeight;
-	private int numberOfShares;
 
-	public HumanPyramid(int humanWeight) {
+	public HumanPyramid(WeightPascalTriangle weightPascalTriangle,
+			int humanWeight) {
+		this.weightPascalTriangle = weightPascalTriangle;
 		this.humanWeight = humanWeight;
 	}
 
-	public double getHumanEdgeWeight(int level) {
-		this.level = level;
-		calculateAggregatedWeightBefore();
-		calculateHumansSharingWeightSameLevel();
-		calculateShareOfTheTotalWeightForHuman(EDGE_INDEX);
-		return getSharedWeight();
+	public double getHumanEdgeWeight(int levelIndex) {
+		return weightPascalTriangle.getWeigthShareOverShoulders(levelIndex,
+				EDGE_INDEX, humanWeight);
 	}
 
-	private void calculateAggregatedWeightBefore() {
-		int numberOfHumansOver = pascalTriangle
-				.getAggregatedNumberOfItemsUntilRow(level);
-		aggregatedWeightBefore = numberOfHumansOver * humanWeight;
+	public double getHumanEdgeWeight(int levelIndex, int columnIndex) {
+		return weightPascalTriangle.getWeigthShareOverShoulders(levelIndex,
+				columnIndex, humanWeight);
 	}
 
-	private void calculateHumansSharingWeightSameLevel() {
-		humansSharingWeight = pascalTriangle.getElementSumByRow(level);
-	}
-
-	private void calculateShareOfTheTotalWeightForHuman(int humandIndex) {
-		numberOfShares = pascalTriangle.getElementByRowAndIndex(level,
-				humandIndex);
-	}
-
-	private double getSharedWeight() {
-		double shareWeight = aggregatedWeightBefore / humansSharingWeight;
-		return shareWeight * numberOfShares;
-	}
 }

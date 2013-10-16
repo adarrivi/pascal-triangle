@@ -1,46 +1,54 @@
-package com.pascal.triangle.model;
+package com.pascal.triangle.model.pyramid.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.google.common.primitives.Doubles;
+import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
 
 /**
  * This class solves the Human Pyramid problem in an algorithmic way without
  * recursion.<br>
  * The intention is compare the results (and as a TODO the performance?) with
- * the formula proposed in PascalTriangle
+ * the formula proposed in {@link FormulaWeightPascalTriangle}
  * 
  */
-public class AlgorithmPascalTriangle {
+class AlgorithmWeightPascalTriangle implements WeightPascalTriangle {
 
+	private static final int UNEXPECTED_WEIGHT = 1;
 	private int maxLevelIndex;
 	private int humanWeight;
 
 	private int currentLevelIndex;
 	private int maxHumanIndex;
+
 	private double[] currentPyramidLevel;
 	private double[] nextPyramidLevel;
 
-	private Map<Integer, List<Double>> pyramidMap = new HashMap<Integer, List<Double>>();
-
-	public AlgorithmPascalTriangle(int maxLevelIndex, int humanWeight) {
-		this.maxLevelIndex = maxLevelIndex;
-		this.humanWeight = humanWeight;
+	AlgorithmWeightPascalTriangle() {
+		// to limit scope
 	}
 
-	public Map<Integer, List<Double>> getWeightOnTheBackPyramidMap() {
+	@Override
+	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex,
+			int humanWeight) {
+		PascalTriangleParameterVerifier.getInstance().assertValidRowAndIndex(
+				rowIndex, columnIndex);
+		this.maxLevelIndex = rowIndex;
+		this.humanWeight = humanWeight;
+		this.maxHumanIndex = 0;
+
 		int safePyramidLevelSize = maxLevelIndex + 1;
 		currentPyramidLevel = new double[safePyramidLevelSize];
 		nextPyramidLevel = new double[safePyramidLevelSize];
 		for (currentLevelIndex = 0; currentLevelIndex <= maxLevelIndex; currentLevelIndex++) {
 			processLevel();
+			if (currentLevelIndex == rowIndex) {
+				return nextPyramidLevel[columnIndex];
+			}
 			currentPyramidLevel = nextPyramidLevel;
 			nextPyramidLevel = new double[safePyramidLevelSize];
 			maxHumanIndex++;
 		}
-		return pyramidMap;
+		// TODO This line will never be executed. Refactor the algorithm so it
+		// can be removed
+		return -UNEXPECTED_WEIGHT;
 	}
 
 	private void processLevel() {
@@ -53,11 +61,6 @@ public class AlgorithmPascalTriangle {
 			nextPyramidLevel[humanIndex + 1] = weightAlreadyBeingSupportedRight
 					+ weightToBeSupported;
 		}
-		addCurrentLevelToPyramidMap();
 	}
 
-	private void addCurrentLevelToPyramidMap() {
-		pyramidMap.put(currentLevelIndex, Doubles.asList(nextPyramidLevel)
-				.subList(0, maxHumanIndex + 1));
-	}
 }

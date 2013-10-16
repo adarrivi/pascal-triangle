@@ -3,4 +3,4 @@ pascal-triangle
 
 TODO List:
 
-* Using integers in the triangle I will be limited to 15 rows due the 15! integer overflow. Look for use double/bigInt.
+* For large pyramids (40+), the loss of precision with the double operations is too big. Consider other approach (maybe guava or BigInteger?)

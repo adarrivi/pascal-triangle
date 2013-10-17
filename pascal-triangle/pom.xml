@@ -13,10 +13,12 @@
 		<org.apache.commons.math.version>2.2</org.apache.commons.math.version>
 		<com.google.guava.version>15.0</com.google.guava.version>
 		<org.springframework.version>3.2.4.RELEASE</org.springframework.version>
+		<io.netty.version>3.7.0.Final</io.netty.version>
 	</properties>
 
 	<dependencies>
 
+		<!-- Utility Libraries -->
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-math</artifactId>
@@ -41,12 +43,20 @@
 			<version>${org.slf4j.version}</version>
 		</dependency>
 
-		<!--Sprign dependencies -->
+		<!--Spring dependencies -->
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
+		
+		<!-- Netty dependency -->
+		<dependency>
+			<groupId>io.netty</groupId>
+			<artifactId>netty</artifactId>
+			<version>${io.netty.version}</version>
+		</dependency>
+
 
 		<!-- Testing dependencies -->
 		<dependency>

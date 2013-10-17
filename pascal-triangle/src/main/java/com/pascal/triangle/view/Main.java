@@ -1,4 +1,4 @@
-package com.pascal.triangle.main;
+package com.pascal.triangle.view;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

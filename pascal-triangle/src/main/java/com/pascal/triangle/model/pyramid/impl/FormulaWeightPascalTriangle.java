@@ -1,6 +1,7 @@
 package com.pascal.triangle.model.pyramid.impl;
 
 import org.apache.commons.math.util.MathUtils;
+import org.springframework.stereotype.Component;
 
 import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
 
@@ -12,6 +13,7 @@ import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
  *      much weight is on each person</a>
  * 
  */
+@Component("formulaWeightPascalTriangle")
 class FormulaWeightPascalTriangle implements WeightPascalTriangle {
 
 	FormulaWeightPascalTriangle() {

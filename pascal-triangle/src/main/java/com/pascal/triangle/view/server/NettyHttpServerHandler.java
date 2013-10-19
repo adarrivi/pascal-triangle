@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
-import com.pascal.triangle.config.HttpControllerFactory;
 import com.pascal.triangle.model.exception.InvalidTriangleException;
+import com.pascal.triangle.view.controller.HttpControllerFactory;
 import com.pascal.triangle.view.exception.InvalidParameterException;
 
 @Component
@@ -32,6 +32,9 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 	@Autowired
 	private HttpResponseFactory httpResponseFactory;
 
+	// It is save to have this 'state-full' attribute here because of this
+	// handler's prototype scope that will create a new instance each time it is
+	// autowried of requested from the context
 	private MessageEvent messageEvent;
 
 	@Override

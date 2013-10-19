@@ -19,17 +19,14 @@ public class HumanPyramidServiceDefaultImpl implements HumanPyramidService {
 	private WeightPascalTriangle weightPascalTriangle;
 
 	@Override
-	public double getEdgeHumanWeightOverShoulders(int levelIndex) {
+	public String getHumanWeightOverShoulders(int levelIndex,
+			Integer optionalHumanIndex) {
 		HumanPyramid humanPyramid = new HumanPyramid(weightPascalTriangle,
 				DEFAULT_WEIGHT);
-		return humanPyramid.getHumanEdgeWeight(levelIndex, EDGE_HUMAN_INDEX);
-	}
-
-	@Override
-	public double getHumanWeightOverShoulders(int levelIndex, int humanIndex) {
-		HumanPyramid humanPyramid = new HumanPyramid(weightPascalTriangle,
-				DEFAULT_WEIGHT);
-		return humanPyramid.getHumanEdgeWeight(levelIndex, humanIndex);
+		int humanIndex = optionalHumanIndex == null ? EDGE_HUMAN_INDEX
+				: optionalHumanIndex.intValue();
+		double weight = humanPyramid.getHumanEdgeWeight(levelIndex, humanIndex);
+		return Double.toString(weight);
 	}
 
 }

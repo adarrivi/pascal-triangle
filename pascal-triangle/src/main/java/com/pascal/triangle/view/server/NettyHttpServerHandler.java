@@ -11,12 +11,14 @@ import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.QueryStringDecoder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
 import com.pascal.triangle.config.HttpControllerFactory;
-import com.pascal.triangle.view.controller.HttpRequestController;
+import com.pascal.triangle.model.exception.InvalidTriangleException;
+import com.pascal.triangle.view.exception.InvalidParameterException;
 
 @Component
 @Scope("prototype")
@@ -27,27 +29,42 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 
 	@Autowired
 	private HttpControllerFactory httpControllerFactory;
+	@Autowired
+	private HttpResponseFactory httpResponseFactory;
 
 	private MessageEvent messageEvent;
 
 	@Override
 	public void messageReceived(ChannelHandlerContext ctx,
 			MessageEvent messageEvent) throws Exception {
-		HttpRequest request = (HttpRequest) messageEvent.getMessage();
 		this.messageEvent = messageEvent;
-
-		QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
-				request.getUri());
-
-		HttpRequestController controller = httpControllerFactory
-				.getController(queryStringDecoder.getPath());
-
-		HttpResponse response = controller.processRequest(request);
-		writeResponse(response);
+		delegateMessageToController();
 	}
 
-	private void writeResponse(HttpResponse response) {
-		// Write the response.
+	private void delegateMessageToController() {
+		HttpRequest request = (HttpRequest) messageEvent.getMessage();
+		QueryStringDecoder queryStringDecoder = new QueryStringDecoder(
+				request.getUri());
+		String urlPath = queryStringDecoder.getPath();
+		try {
+			writeResponseInChannelAndClose(httpControllerFactory.getController(
+					urlPath).processRequest(request));
+		} catch (NoSuchBeanDefinitionException ex) {
+			LOG.debug("No controller found for the url: {}", urlPath);
+			writeResponseInChannelAndClose(httpResponseFactory
+					.createUrlNotFoundResponse());
+		} catch (InvalidTriangleException ex) {
+			LOG.error("Incorrect pyramid parameters", ex);
+			writeResponseInChannelAndClose(httpResponseFactory
+					.createInvalidInputParametersResponse(ex.getMessage()));
+		} catch (InvalidParameterException ex) {
+			LOG.error("Invlid request parameters", ex);
+			writeResponseInChannelAndClose(httpResponseFactory
+					.createInvalidInputParametersResponse(ex.getMessage()));
+		}
+	}
+
+	private void writeResponseInChannelAndClose(HttpResponse response) {
 		ChannelFuture future = messageEvent.getChannel().write(response);
 		future.addListener(ChannelFutureListener.CLOSE);
 	}
@@ -55,8 +72,7 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 	@Override
 	public void exceptionCaught(ChannelHandlerContext ctx,
 			ExceptionEvent exceptionEvent) throws Exception {
-		LOG.error("Error found handling the request.",
-				exceptionEvent.getCause());
+		LOG.error("Error found handling the request", exceptionEvent.getCause());
 		exceptionEvent.getChannel().close();
 	}
 }

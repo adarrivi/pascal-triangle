@@ -15,6 +15,7 @@ import org.springframework.stereotype.Component;
 public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 
 	private static final int MAX_HTTP_CONTENT_LENGTH = 65536;
+
 	@Autowired
 	private ApplicationContext applicationContext;
 

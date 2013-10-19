@@ -1,16 +1,13 @@
 package com.pascal.triangle.model.pyramid.impl;
 
+import org.springframework.stereotype.Component;
+
 import com.pascal.triangle.model.exception.InvalidTriangleException;
 
+@Component
 class PascalTriangleParameterVerifier {
 
-	private static final PascalTriangleParameterVerifier INSTANCE = new PascalTriangleParameterVerifier();
-
-	public static PascalTriangleParameterVerifier getInstance() {
-		return INSTANCE;
-	}
-
-	private PascalTriangleParameterVerifier() {
+	PascalTriangleParameterVerifier() {
 		// To limit scope
 	}
 

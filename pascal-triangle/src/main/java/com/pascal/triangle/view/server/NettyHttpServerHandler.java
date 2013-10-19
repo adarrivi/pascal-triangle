@@ -48,7 +48,8 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 		String urlPath = queryStringDecoder.getPath();
 		try {
 			writeResponseInChannelAndClose(httpControllerFactory.getController(
-					urlPath).processRequest(request));
+					urlPath).processRequest(request,
+					queryStringDecoder.getParameters()));
 		} catch (NoSuchBeanDefinitionException ex) {
 			LOG.debug("No controller found for the url: {}", urlPath);
 			writeResponseInChannelAndClose(httpResponseFactory

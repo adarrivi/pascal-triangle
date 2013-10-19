@@ -1,9 +1,10 @@
 package com.pascal.triangle.model.pyramid.impl;
 
 import org.apache.commons.math.util.MathUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
+import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
 /**
  * This formula and the explanation can be found at:
@@ -13,18 +14,21 @@ import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
  *      much weight is on each person</a>
  * 
  */
-@Component("formulaWeightPascalTriangle")
-class FormulaWeightPascalTriangle implements WeightPascalTriangle {
+@Component("formulaWeightPascalTriangleCalculator")
+class FormulaWeightPascalTriangleCalculator implements
+		WeightPascalTriangleCalculator {
 
-	FormulaWeightPascalTriangle() {
+	@Autowired
+	private PascalTriangleParameterVerifier parameterVerifier;
+
+	FormulaWeightPascalTriangleCalculator() {
 		// To limit scope
 	}
 
 	@Override
 	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex,
 			int humanWeight) {
-		PascalTriangleParameterVerifier.getInstance().assertValidRowAndIndex(
-				rowIndex, columnIndex);
+		parameterVerifier.assertValidRowAndIndex(rowIndex, columnIndex);
 		double summatory = 0;
 		for (int i = 0; i <= columnIndex; i++) {
 			summatory += MathUtils.binomialCoefficientDouble(rowIndex + 2, i)

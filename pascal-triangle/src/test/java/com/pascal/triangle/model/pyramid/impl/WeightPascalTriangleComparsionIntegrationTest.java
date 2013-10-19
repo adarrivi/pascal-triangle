@@ -5,26 +5,45 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
-import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
+import com.pascal.triangle.config.SpringApplicationContext;
+import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
-public class WeightPascalTriangleTest {
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = SpringApplicationContext.class)
+public class WeightPascalTriangleComparsionIntegrationTest {
 
 	private static final int MAX_ROWS = 30;
 
 	private static final int HUMAN_WEIGHT = 50;
 
-	private List<WeightPascalTriangle> victims = Arrays.asList(
-			WeightPascalTriangleFactory.getInstance()
-					.createAlgorithmWeightPascalTriangle(),
-			WeightPascalTriangleFactory.getInstance()
-					.createFormulaWeightPascalTriangle());
+	@Autowired
+	@Qualifier("formulaWeightPascalTriangleCalculator")
+	private WeightPascalTriangleCalculator formulaCalculator;
+
+	@Autowired
+	@Qualifier("algorithmWeightPascalTriangleCalculator")
+	private WeightPascalTriangleCalculator algorithmCalculator;
+
+	private List<WeightPascalTriangleCalculator> victims;
 
 	private List<Double> weights;
 	private int rowIndex;
 	private int columnIndex;
 	private int maxColumnIndex;
+
+	@Before
+	public void setUp() {
+		victims = Arrays.asList(formulaCalculator, algorithmCalculator);
+	}
 
 	@Test
 	public void getWeightShouldBeSameForAllVictims() {
@@ -44,7 +63,7 @@ public class WeightPascalTriangleTest {
 	}
 
 	private void processAllVictims() {
-		for (WeightPascalTriangle victim : victims) {
+		for (WeightPascalTriangleCalculator victim : victims) {
 			double weigthShareOverShoulders = victim
 					.getWeigthShareOverShoulders(rowIndex, columnIndex,
 							HUMAN_WEIGHT);

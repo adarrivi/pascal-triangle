@@ -1,17 +1,26 @@
 package com.pascal.triangle.model.pyramid.impl;
 
-import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
 /**
  * This class solves the Human Pyramid problem in an algorithmic way without
  * recursion.<br>
  * The intention is compare the results (and as a TODO the performance?) with
- * the formula proposed in {@link FormulaWeightPascalTriangle}
+ * the formula proposed in {@link FormulaWeightPascalTriangleCalculator}
  * 
  */
-class AlgorithmWeightPascalTriangle implements WeightPascalTriangle {
+@Component("algorithmWeightPascalTriangleCalculator")
+class AlgorithmWeightPascalTriangleCalculator implements
+		WeightPascalTriangleCalculator {
 
 	private static final int UNEXPECTED_WEIGHT = 1;
+
+	@Autowired
+	private PascalTriangleParameterVerifier parameterVerifier;
+
 	private int maxLevelIndex;
 	private int humanWeight;
 
@@ -21,15 +30,14 @@ class AlgorithmWeightPascalTriangle implements WeightPascalTriangle {
 	private double[] currentPyramidLevel;
 	private double[] nextPyramidLevel;
 
-	AlgorithmWeightPascalTriangle() {
+	AlgorithmWeightPascalTriangleCalculator() {
 		// to limit scope
 	}
 
 	@Override
 	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex,
 			int humanWeight) {
-		PascalTriangleParameterVerifier.getInstance().assertValidRowAndIndex(
-				rowIndex, columnIndex);
+		parameterVerifier.assertValidRowAndIndex(rowIndex, columnIndex);
 		this.maxLevelIndex = rowIndex;
 		this.humanWeight = humanWeight;
 		this.maxHumanIndex = 0;

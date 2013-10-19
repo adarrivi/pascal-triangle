@@ -1,20 +1,20 @@
 package com.pascal.triangle.model;
 
-import com.pascal.triangle.model.pyramid.WeightPascalTriangle;
+import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
 public class HumanPyramid {
 
-	private WeightPascalTriangle weightPascalTriangle;
+	private WeightPascalTriangleCalculator weightPascalTriangleCalculator;
 	private int humanWeight;
 
-	public HumanPyramid(WeightPascalTriangle weightPascalTriangle,
+	public HumanPyramid(WeightPascalTriangleCalculator weightPascalTriangleCalculator,
 			int humanWeight) {
-		this.weightPascalTriangle = weightPascalTriangle;
+		this.weightPascalTriangleCalculator = weightPascalTriangleCalculator;
 		this.humanWeight = humanWeight;
 	}
 
 	public double getHumanEdgeWeight(int levelIndex, int columnIndex) {
-		return weightPascalTriangle.getWeigthShareOverShoulders(levelIndex,
+		return weightPascalTriangleCalculator.getWeigthShareOverShoulders(levelIndex,
 				columnIndex, humanWeight);
 	}
 

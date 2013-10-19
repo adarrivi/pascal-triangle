@@ -10,11 +10,16 @@ import org.jboss.netty.bootstrap.ServerBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.channel.socket.nio.NioServerSocketChannelFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class NettyHttpServer {
+
+	private static final Logger LOG = LoggerFactory
+			.getLogger(NettyHttpServer.class);
 
 	@Autowired
 	private ChannelPipelineFactory pipelineFactory;
@@ -44,10 +49,12 @@ public class NettyHttpServer {
 
 	private void startServer(ServerBootstrap bootstrap) {
 		serverChannel = bootstrap.bind(new InetSocketAddress(8080));
+		LOG.debug("Http server started");
 	}
 
 	@PreDestroy
 	public void stop() {
 		serverChannel.close();
+		LOG.debug("Http server stopped");
 	}
 }

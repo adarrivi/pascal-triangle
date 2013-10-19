@@ -26,4 +26,13 @@ public class HttpResponseFactory {
 		response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
 		return response;
 	}
+
+	public HttpResponse createOkTextPlainResponse(String content) {
+		HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
+				HttpResponseStatus.OK);
+		response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
+		response.setContent(ChannelBuffers.copiedBuffer(content,
+				CharsetUtil.UTF_8));
+		return response;
+	}
 }

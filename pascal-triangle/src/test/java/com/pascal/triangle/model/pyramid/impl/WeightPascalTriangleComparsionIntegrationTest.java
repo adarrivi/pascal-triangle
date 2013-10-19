@@ -14,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.support.AnnotationConfigContextLoader;
 
+import com.google.common.collect.Iterables;
 import com.pascal.triangle.config.SpringApplicationContext;
 import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
@@ -72,11 +73,9 @@ public class WeightPascalTriangleComparsionIntegrationTest {
 	}
 
 	private void assertAllWeightsAreTheSame() {
-		Double firstValue = weights.get(0);
+		Double firstValue = Iterables.getFirst(weights, null);
 		for (Double value : weights) {
-			// TODO with more than 30 levels, the delta is very big. Look for an
-			// alternative (maybe BigIteger or guava?)
-			Assert.assertEquals(firstValue, value, 0.0000001);
+			Assert.assertEquals(firstValue, value, 0);
 		}
 		weights.clear();
 	}

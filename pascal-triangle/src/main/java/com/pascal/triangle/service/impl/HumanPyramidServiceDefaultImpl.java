@@ -35,7 +35,8 @@ public class HumanPyramidServiceDefaultImpl implements HumanPyramidService {
 		long currentTimeMillis = System.currentTimeMillis();
 		double weight = humanPyramid.getHumanEdgeWeight(levelIndex, humanIndex);
 		currentTimeMillis = System.currentTimeMillis() - currentTimeMillis;
-		LOG.debug("The operation took {} milliseconds", currentTimeMillis);
+		LOG.debug("The getHumanWeight operation took {} milliseconds",
+				currentTimeMillis);
 		return Double.toString(weight);
 	}
 

@@ -5,6 +5,7 @@ import static org.mockito.Mockito.doThrow;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -88,5 +89,20 @@ public class FormulaWeightPascalTriangleCalculatorTest {
 		givenRowIndexAndColumnIndex(4, 3);
 		whenGetWeigthShareOverShoulders();
 		thenSharedWeightShouldBe(125);
+	}
+
+	@Test
+	public void getWeigthShareOverShoulders_Row30Index15_Returns1326() {
+		givenRowIndexAndColumnIndex(30, 15);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(1326.0801054537296);
+	}
+
+	@Ignore("Actually this will return Infinite due to the factorial limitations")
+	@Test
+	public void getWeigthShareOverShoulders_Row1000Index500_Returns48787() {
+		givenRowIndexAndColumnIndex(1000, 500);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(48787.48784017304);
 	}
 }

@@ -7,7 +7,9 @@ import org.springframework.stereotype.Component;
 import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
 /**
- * This formula and the explanation can be found at:
+ * Weight pascal triangle approach using a formula. This solution is limited to
+ * just a few lines (<30) because of its factorial operations. The formula and
+ * the explanation can be found at:
  * 
  * @see <a
  *      href="http://math.stackexchange.com/questions/486807/how-much-weight-is-on-each-person-in-a-human-pyramid">how

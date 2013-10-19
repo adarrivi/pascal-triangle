@@ -8,27 +8,16 @@ import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 /**
  * This class solves the Human Pyramid problem in an algorithmic way without
  * recursion.<br>
- * The intention is compare the results (and as a TODO the performance?) with
- * the formula proposed in {@link FormulaWeightPascalTriangleCalculator}
+ * It solves the problem of calculating the weight for triangles higher than 30
+ * rows that {@link FormulaWeightPascalTriangleCalculator} has.
  * 
  */
 @Component("algorithmWeightPascalTriangleCalculator")
 class AlgorithmWeightPascalTriangleCalculator implements
 		WeightPascalTriangleCalculator {
 
-	private static final int UNEXPECTED_WEIGHT = 1;
-
 	@Autowired
 	private PascalTriangleParameterVerifier parameterVerifier;
-
-	private int maxLevelIndex;
-	private int humanWeight;
-
-	private int currentLevelIndex;
-	private int maxHumanIndex;
-
-	private double[] currentPyramidLevel;
-	private double[] nextPyramidLevel;
 
 	AlgorithmWeightPascalTriangleCalculator() {
 		// to limit scope
@@ -36,38 +25,27 @@ class AlgorithmWeightPascalTriangleCalculator implements
 
 	@Override
 	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex,
-			int humanWeight) {
+			int weight) {
 		parameterVerifier.assertValidRowAndIndex(rowIndex, columnIndex);
-		this.maxLevelIndex = rowIndex;
-		this.humanWeight = humanWeight;
-		this.maxHumanIndex = 0;
 
-		int safePyramidLevelSize = maxLevelIndex + 1;
-		currentPyramidLevel = new double[safePyramidLevelSize];
-		nextPyramidLevel = new double[safePyramidLevelSize];
-		for (currentLevelIndex = 0; currentLevelIndex <= maxLevelIndex; currentLevelIndex++) {
-			processLevel();
-			if (currentLevelIndex == rowIndex) {
-				return nextPyramidLevel[columnIndex];
-			}
-			currentPyramidLevel = nextPyramidLevel;
-			nextPyramidLevel = new double[safePyramidLevelSize];
-			maxHumanIndex++;
+		AlgorithmParameters parameters = new AlgorithmParameters(weight,
+				rowIndex, columnIndex);
+
+		for (parameters.currenRowIndex = 0; parameters.currenRowIndex <= rowIndex; parameters.currenRowIndex++) {
+			parameters.moveToNextRow();
+			processRowUntilExpectedValueFound(parameters);
 		}
-		// TODO This line will never be executed. Refactor the algorithm so it
-		// can be removed
-		return -UNEXPECTED_WEIGHT;
+		return parameters.getExpectectedValue();
 	}
 
-	private void processLevel() {
-		for (int humanIndex = 0; humanIndex < maxHumanIndex; humanIndex++) {
-			double weightToBeSupported = (currentPyramidLevel[humanIndex] + humanWeight) / 2;
-			double weightAlreadyBeingSupportedLeft = nextPyramidLevel[humanIndex];
-			double weightAlreadyBeingSupportedRight = nextPyramidLevel[humanIndex + 1];
-			nextPyramidLevel[humanIndex] = weightAlreadyBeingSupportedLeft
-					+ weightToBeSupported;
-			nextPyramidLevel[humanIndex + 1] = weightAlreadyBeingSupportedRight
-					+ weightToBeSupported;
+	private void processRowUntilExpectedValueFound(
+			AlgorithmParameters parameters) {
+		for (parameters.currentColumnIndex = 0; parameters.currentColumnIndex < parameters.maxColumnIndex; parameters.currentColumnIndex++) {
+			parameters.addHalfWeightForCurrentRowColumnToLeftInNextRow();
+			if (parameters.isExpectedValueFound()) {
+				return;
+			}
+			parameters.addHalfWeightForCurrentRowColumnToRightInNextRow();
 		}
 	}
 

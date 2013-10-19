@@ -89,4 +89,25 @@ public class AlgorithmWeightPascalTriangleCalculatorTest {
 		thenSharedWeightShouldBe(125);
 	}
 
+	@Test
+	public void getWeigthShareOverShoulders_Row30Index15_Returns1326() {
+		givenRowIndexAndColumnIndex(30, 15);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(1326.0801054537296);
+	}
+
+	@Test
+	public void getWeigthShareOverShoulders_Row40Index20_Returns1792() {
+		givenRowIndexAndColumnIndex(40, 20);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(1792.9900903798625);
+	}
+
+	@Test
+	public void getWeigthShareOverShoulders_Row1000Index500_Returns48787() {
+		givenRowIndexAndColumnIndex(1000, 500);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(48787.48784017304);
+	}
+
 }

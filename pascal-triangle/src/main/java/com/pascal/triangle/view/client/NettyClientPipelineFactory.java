@@ -7,13 +7,7 @@ import org.jboss.netty.channel.ChannelPipelineFactory;
 import org.jboss.netty.handler.codec.http.HttpClientCodec;
 import org.jboss.netty.handler.codec.http.HttpContentDecompressor;
 
-public class HttpSnoopClientPipelineFactory implements ChannelPipelineFactory {
-
-	private final boolean ssl;
-
-	public HttpSnoopClientPipelineFactory(boolean ssl) {
-		this.ssl = ssl;
-	}
+public class NettyClientPipelineFactory implements ChannelPipelineFactory {
 
 	@Override
 	public ChannelPipeline getPipeline() throws Exception {
@@ -29,7 +23,7 @@ public class HttpSnoopClientPipelineFactory implements ChannelPipelineFactory {
 		// Uncomment the following line if you don't want to handle HttpChunks.
 		// pipeline.addLast("aggregator", new HttpChunkAggregator(1048576));
 
-		pipeline.addLast("handler", new HttpSnoopClientHandler());
+		pipeline.addLast("handler", new NettyHttpClientHandler());
 		return pipeline;
 	}
 }

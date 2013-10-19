@@ -1,46 +1,20 @@
 package com.pascal.triangle.view.client;
 
 import java.net.InetSocketAddress;
-import java.net.URI;
 import java.util.concurrent.Executors;
 
 import org.jboss.netty.bootstrap.ClientBootstrap;
 import org.jboss.netty.channel.Channel;
 import org.jboss.netty.channel.ChannelFuture;
 import org.jboss.netty.channel.socket.nio.NioClientSocketChannelFactory;
-import org.jboss.netty.handler.codec.http.CookieEncoder;
 import org.jboss.netty.handler.codec.http.DefaultHttpRequest;
-import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpMethod;
 import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.jboss.netty.handler.codec.http.HttpVersion;
 
 public class NettyHttpClient {
-	private final URI uri;
-
-	public NettyHttpClient(URI uri) {
-		this.uri = uri;
-	}
 
 	public void run() {
-		String scheme = uri.getScheme() == null ? "http" : uri.getScheme();
-		String host = uri.getHost() == null ? "localhost" : uri.getHost();
-		int port = uri.getPort();
-		if (port == -1) {
-			if ("http".equalsIgnoreCase(scheme)) {
-				port = 80;
-			} else if ("https".equalsIgnoreCase(scheme)) {
-				port = 443;
-			}
-		}
-
-		if (!"http".equalsIgnoreCase(scheme)
-				&& !"https".equalsIgnoreCase(scheme)) {
-			System.err.println("Only HTTP(S) is supported.");
-			return;
-		}
-
-		boolean ssl = "https".equalsIgnoreCase(scheme);
 
 		// Configure the client.
 		ClientBootstrap bootstrap = new ClientBootstrap(
@@ -49,11 +23,11 @@ public class NettyHttpClient {
 						Executors.newCachedThreadPool()));
 
 		// Set up the event pipeline factory.
-		bootstrap.setPipelineFactory(new HttpSnoopClientPipelineFactory(ssl));
+		bootstrap.setPipelineFactory(new NettyClientPipelineFactory());
 
 		// Start the connection attempt.
-		ChannelFuture future = bootstrap.connect(new InetSocketAddress(host,
-				port));
+		ChannelFuture future = bootstrap.connect(new InetSocketAddress(
+				"localhost", 8080));
 
 		// Wait until the connection attempt succeeds or fails.
 		Channel channel = future.awaitUninterruptibly().getChannel();
@@ -65,18 +39,7 @@ public class NettyHttpClient {
 
 		// Prepare the HTTP request.
 		HttpRequest request = new DefaultHttpRequest(HttpVersion.HTTP_1_1,
-				HttpMethod.GET, uri.getRawPath());
-		request.setHeader(HttpHeaders.Names.HOST, host);
-		request.setHeader(HttpHeaders.Names.CONNECTION,
-				HttpHeaders.Values.CLOSE);
-		request.setHeader(HttpHeaders.Names.ACCEPT_ENCODING,
-				HttpHeaders.Values.GZIP);
-
-		// Set some example cookies.
-		CookieEncoder httpCookieEncoder = new CookieEncoder(false);
-		httpCookieEncoder.addCookie("my-cookie", "foo");
-		httpCookieEncoder.addCookie("another-cookie", "bar");
-		request.setHeader(HttpHeaders.Names.COOKIE, httpCookieEncoder.encode());
+				HttpMethod.GET, "/humanEdgeWeight?level=5&index=4");
 
 		// Send the HTTP request.
 		channel.write(request);
@@ -89,7 +52,6 @@ public class NettyHttpClient {
 	}
 
 	public static void main(String[] args) throws Exception {
-		URI uri = new URI("http://localhost:8080/test");
-		new NettyHttpClient(uri).run();
+		new NettyHttpClient().run();
 	}
 }

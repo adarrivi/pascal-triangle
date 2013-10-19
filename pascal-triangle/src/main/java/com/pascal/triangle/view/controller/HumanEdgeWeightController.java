@@ -14,9 +14,9 @@ import com.pascal.triangle.view.server.HttpResponseFactory;
 @Controller("/humanEdgeWeight")
 public class HumanEdgeWeightController implements HttpRequestController {
 
-	private static final String HUMAN_INDEX_PARAMETER = "index";
+	protected static final String HUMAN_INDEX_PARAMETER = "index";
 
-	private static final String LEVEL_INDEX_PARAMETER = "level";
+	protected static final String LEVEL_INDEX_PARAMETER = "level";
 
 	@Autowired
 	private HumanPyramidService humanPyramidService;

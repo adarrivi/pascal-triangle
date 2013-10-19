@@ -40,6 +40,9 @@ public class HttpParameterVerifier {
 
 	private String getOptionalParameterValue(String parameterName,
 			Map<String, List<String>> parameters) {
+		if (parameters == null) {
+			return null;
+		}
 		List<String> values = parameters.get(parameterName);
 		if (values == null) {
 			return null;

@@ -1,9 +1,8 @@
 package com.pascal.triangle.view.server;
 
-import static org.jboss.netty.handler.codec.http.HttpHeaders.Names.CONTENT_TYPE;
-
 import org.jboss.netty.buffer.ChannelBuffers;
 import org.jboss.netty.handler.codec.http.DefaultHttpResponse;
+import org.jboss.netty.handler.codec.http.HttpHeaders;
 import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.jboss.netty.handler.codec.http.HttpResponseStatus;
 import org.jboss.netty.handler.codec.http.HttpVersion;
@@ -21,18 +20,21 @@ public class HttpResponseFactory {
 	public HttpResponse createInvalidInputParametersResponse(String message) {
 		HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
 				HttpResponseStatus.PRECONDITION_FAILED);
-		response.setContent(ChannelBuffers.copiedBuffer(message,
+		return setPlainUTF8TextContent(message, response);
+	}
+
+	private HttpResponse setPlainUTF8TextContent(String content,
+			HttpResponse response) {
+		response.setContent(ChannelBuffers.copiedBuffer(content,
 				CharsetUtil.UTF_8));
-		response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
+		response.setHeader(HttpHeaders.Names.CONTENT_TYPE,
+				"text/plain; charset=UTF-8");
 		return response;
 	}
 
 	public HttpResponse createOkTextPlainResponse(String content) {
 		HttpResponse response = new DefaultHttpResponse(HttpVersion.HTTP_1_1,
 				HttpResponseStatus.OK);
-		response.setHeader(CONTENT_TYPE, "text/plain; charset=UTF-8");
-		response.setContent(ChannelBuffers.copiedBuffer(content,
-				CharsetUtil.UTF_8));
-		return response;
+		return setPlainUTF8TextContent(content, response);
 	}
 }

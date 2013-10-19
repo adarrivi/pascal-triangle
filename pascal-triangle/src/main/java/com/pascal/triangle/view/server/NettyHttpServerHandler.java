@@ -24,7 +24,7 @@ import com.pascal.triangle.view.exception.InvalidParameterException;
 @Scope("prototype")
 public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 
-	private static final Logger LOG = LoggerFactory
+	private static final Logger LOG = LoggerFactory 
 			.getLogger(NettyHttpServerHandler.class);
 
 	@Autowired

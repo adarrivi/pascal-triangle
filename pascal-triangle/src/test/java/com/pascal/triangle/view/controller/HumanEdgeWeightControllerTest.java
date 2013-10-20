@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.netty.handler.codec.http.HttpRequest;
-import org.jboss.netty.handler.codec.http.HttpResponse;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -37,7 +36,6 @@ public class HumanEdgeWeightControllerTest {
 	private HttpRequest request;
 	@Mock
 	private Map<String, List<String>> parameters;
-	private HttpResponse response;
 
 	@Before
 	public void setUp() {
@@ -51,7 +49,7 @@ public class HumanEdgeWeightControllerTest {
 	}
 
 	private void whenProcessRequest() {
-		response = victim.processRequest(request, parameters);
+		victim.processRequest(request, parameters);
 	}
 
 	private void thenMandatoryCheckShouldBeDoneOver(String parameter) {

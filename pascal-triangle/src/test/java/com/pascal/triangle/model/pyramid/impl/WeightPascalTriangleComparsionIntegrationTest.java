@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import com.google.common.collect.Iterables;
 import com.pascal.triangle.config.SpringApplicationContext;
 import com.pascal.triangle.model.pyramid.WeightPascalTriangleCalculator;
 
+//TODO It would be better to have a different Maven module for integration tests so it could be run independently
+@Ignore("This is an integratoin test that shoulnd't be run with the unit tests")
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(loader = AnnotationConfigContextLoader.class, classes = SpringApplicationContext.class)
 public class WeightPascalTriangleComparsionIntegrationTest {

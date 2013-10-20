@@ -10,13 +10,22 @@ import com.pascal.triangle.config.SpringApplicationContext;
 public class Main {
 
 	private static final Logger LOG = LoggerFactory.getLogger(Main.class);
-	static AbstractApplicationContext applicationContext;
+	private static final Main INSTANCE = new Main();
+	private AbstractApplicationContext applicationContext;
 
-	public static void main(String[] args) {
-		loadApplicationContext();
+	private Main() {
+		// To limit scope
 	}
 
-	private static void loadApplicationContext() {
+	public static Main getInstance() {
+		return INSTANCE;
+	}
+
+	public static void main(String[] args) {
+		INSTANCE.loadApplicationContext();
+	}
+
+	private void loadApplicationContext() {
 		// The resource is closed in registerShutdownHook.
 		applicationContext = new AnnotationConfigApplicationContext(
 				SpringApplicationContext.class);
@@ -24,7 +33,7 @@ public class Main {
 		LOG.debug("Application context loaded");
 	}
 
-	static AbstractApplicationContext getApplicationContext() {
+	protected AbstractApplicationContext getApplicationContext() {
 		return applicationContext;
 	}
 

@@ -22,7 +22,7 @@ import com.pascal.triangle.view.controller.HttpControllerFactory;
 public class SpringApplicationContext {
 
 	@Bean
-	public static PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
+	public PropertySourcesPlaceholderConfigurer propertySourcesPlaceholderConfigurer() {
 		return new PropertySourcesPlaceholderConfigurer();
 	}
 

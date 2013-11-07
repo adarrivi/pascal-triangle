@@ -23,7 +23,7 @@ import com.pascal.triangle.service.HumanPyramidService;
  * 
  */
 @Controller
-public class HumanEdgeWeightController {
+public class HumanPyramidController {
 
 	@Autowired
 	private HumanPyramidService humanPyramidService;
@@ -38,7 +38,7 @@ public class HumanEdgeWeightController {
 		return HttpUtils.createOkResponse(weight);
 	}
 
-	public Integer getMandatoryIntegerValue(String parameterName,
+	private Integer getMandatoryIntegerValue(String parameterName,
 			Map<String, List<String>> parameters) {
 		Integer value = getOptionalIntegerValue(parameterName, parameters);
 		if (value == null) {

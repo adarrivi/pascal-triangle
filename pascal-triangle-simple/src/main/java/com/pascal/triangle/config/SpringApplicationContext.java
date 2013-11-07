@@ -10,7 +10,13 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 
-// This class holds the application context configuration. It is a java representation of applicationContext.xml file
+/**
+ * This class holds the application context configuration. It is a java
+ * representation of applicationContext.xml file
+ * 
+ * @author adarrivi
+ * 
+ */
 @Configuration
 @ComponentScan("com.pascal.triangle")
 @EnableCaching

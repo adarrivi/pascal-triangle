@@ -1,16 +1,21 @@
 package com.pascal.triangle.service;
 
+import java.util.concurrent.TimeUnit;
+
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.MockitoAnnotations;
-
-import com.pascal.triangle.service.HumanPyramidService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class HumanPyramidServiceTest {
 
+	private static final Logger LOG = LoggerFactory
+			.getLogger(HumanPyramidServiceTest.class);
 	private HumanPyramidService victim = new HumanPyramidService();
 
 	@Rule
@@ -18,7 +23,7 @@ public class HumanPyramidServiceTest {
 
 	private int rowIndex;
 	private int columnIndex;
-	private double sharedWeight;
+	private String sharedWeight;
 
 	@Before
 	public void setUp() {
@@ -33,8 +38,19 @@ public class HumanPyramidServiceTest {
 	}
 
 	private void whenGetWeigthShareOverShoulders() {
+		double memoryUsage = getCurrentMemoryUsageKB();
+		long nanoTime = System.nanoTime();
 		sharedWeight = victim
-				.getWeigthShareOverShoulders(rowIndex, columnIndex);
+				.getHumanWeightOverShoulders(rowIndex, columnIndex);
+		nanoTime = System.nanoTime() - nanoTime;
+		memoryUsage = getCurrentMemoryUsageKB() - memoryUsage;
+		LOG.debug("Used Memory: {} KB, time taken {}ms ", memoryUsage,
+				TimeUnit.NANOSECONDS.toMillis(nanoTime));
+	}
+
+	private double getCurrentMemoryUsageKB() {
+		Runtime runtime = Runtime.getRuntime();
+		return (runtime.totalMemory() - runtime.freeMemory()) / 1024;
 	}
 
 	private void givenRowIndexAndColumnIndex(int givenRowIndex,
@@ -44,7 +60,8 @@ public class HumanPyramidServiceTest {
 	}
 
 	private void thenSharedWeightShouldBe(double expectedSharedWeight) {
-		Assert.assertEquals(expectedSharedWeight, sharedWeight, 0);
+		Assert.assertEquals(expectedSharedWeight,
+				Double.parseDouble(sharedWeight), 0);
 	}
 
 	@Test
@@ -80,6 +97,29 @@ public class HumanPyramidServiceTest {
 		givenRowIndexAndColumnIndex(1000, 500);
 		whenGetWeigthShareOverShoulders();
 		thenSharedWeightShouldBe(48787.48784017304);
+	}
+
+	@Test
+	public void getWeigthShareOverShoulders_Row20000Index100_Returns10050() {
+		givenRowIndexAndColumnIndex(20000, 100);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(10050.0);
+	}
+
+	@Ignore("This test can take up to 7 seconds to execute")
+	@Test
+	public void getWeigthShareOverShoulders_Row50000Index100_Returns10050() {
+		givenRowIndexAndColumnIndex(50000, 100);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(10050.0);
+	}
+
+	@Ignore("This test can take up to 1.30 mins to execute")
+	@Test
+	public void getWeigthShareOverShoulders_Row200000Index100_Returns10050() {
+		givenRowIndexAndColumnIndex(200000, 100);
+		whenGetWeigthShareOverShoulders();
+		thenSharedWeightShouldBe(10050.0);
 	}
 
 }

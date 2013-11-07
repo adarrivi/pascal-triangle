@@ -7,7 +7,7 @@ import org.jboss.netty.handler.codec.http.HttpChunkAggregator;
 import org.jboss.netty.handler.codec.http.HttpRequestDecoder;
 import org.jboss.netty.handler.codec.http.HttpResponseEncoder;
 
-import com.pascal.triangle.http.controller.HumanEdgeWeightController;
+import com.pascal.triangle.http.controller.HumanPyramidController;
 
 /**
  * Class that sets up the http pipeline
@@ -17,11 +17,11 @@ import com.pascal.triangle.http.controller.HumanEdgeWeightController;
  */
 public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 
-	private HumanEdgeWeightController humanEdgeWeightController;
+	private HumanPyramidController humanPyramidController;
 
 	public NettyHttpServerPipelineFactory(
-			HumanEdgeWeightController humanEdgeWeightController) {
-		this.humanEdgeWeightController = humanEdgeWeightController;
+			HumanPyramidController humanEdgeWeightController) {
+		this.humanPyramidController = humanEdgeWeightController;
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class NettyHttpServerPipelineFactory implements ChannelPipelineFactory {
 		pipeline.addLast("encoder", new HttpResponseEncoder());
 		pipeline.addLast("aggregator", new HttpChunkAggregator(65536));
 		pipeline.addLast("handler", new NettyHttpServerHandler(
-				humanEdgeWeightController));
+				humanPyramidController));
 		return pipeline;
 	}
 }

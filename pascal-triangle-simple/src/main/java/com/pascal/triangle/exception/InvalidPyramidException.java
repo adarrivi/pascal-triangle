@@ -7,11 +7,11 @@ package com.pascal.triangle.exception;
  * @author adarrivi
  * 
  */
-public class InvalidTriangleException extends RuntimeException {
+public class InvalidPyramidException extends RuntimeException {
 
 	private static final long serialVersionUID = 1L;
 
-	public InvalidTriangleException(String message) {
+	public InvalidPyramidException(String message) {
 		super(message);
 	}
 }

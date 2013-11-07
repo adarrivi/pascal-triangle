@@ -3,8 +3,14 @@ package com.pascal.triangle.service;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
-import com.pascal.triangle.exception.InvalidTriangleException;
-
+/**
+ * Service that resolves the human pyramid problem. To improve readability and
+ * keep it not very complex, the index validation, as well as the problem
+ * parameters, have been moved to HumanPyramidParameterWrapper
+ * 
+ * @author adarrivi
+ * 
+ */
 @Service
 public class HumanPyramidService {
 
@@ -14,64 +20,99 @@ public class HumanPyramidService {
 	@Cacheable(value = "getHumanWeightOverShoulders")
 	public String getHumanWeightOverShoulders(int levelIndex,
 			Integer optionalHumanIndex) {
-		int humanIndex = optionalHumanIndex == null ? EDGE_HUMAN_INDEX
-				: optionalHumanIndex.intValue();
-
-		double weight = getWeigthShareOverShoulders(levelIndex, humanIndex);
-
+		double weight = getWeigthOverShoulders(levelIndex,
+				getValidHumanIndex(optionalHumanIndex));
 		return Double.toString(weight);
 	}
 
-	public double getWeigthShareOverShoulders(int rowIndex, int columnIndex) {
-		assertValidRowAndIndex(rowIndex, columnIndex);
+	private int getValidHumanIndex(Integer optionalHumanIndex) {
+		if (optionalHumanIndex == null) {
+			return EDGE_HUMAN_INDEX;
+		}
+		return optionalHumanIndex.intValue();
+	}
 
-		AlgorithmParameters parameters = new AlgorithmParameters(
-				DEFAULT_WEIGHT, rowIndex, columnIndex);
+	private double getWeigthOverShoulders(int expectedRowIndex,
+			int expectedColumnIndex) {
+		HumanPyramidParameterWrapper parameters = new HumanPyramidParameterWrapper(
+				expectedRowIndex, expectedColumnIndex);
 
-		for (parameters.currenRowIndex = 0; parameters.currenRowIndex <= rowIndex; parameters.currenRowIndex++) {
-			parameters.moveToNextRow();
+		for (parameters.currenRowIndex = 0; parameters.currenRowIndex <= expectedRowIndex; parameters.currenRowIndex++) {
+			moveToNextRow(parameters);
 			processRowUntilExpectedValueFound(parameters);
 		}
-		return parameters.getExpectectedValue();
-	}
 
-	private void assertValidRowAndIndex(int rowIndex, int columnIndex) {
-		assertNoNegativeRowIndex(rowIndex);
-		assertIndexWithinRowIndex(columnIndex, rowIndex);
-	}
-
-	private void assertNoNegativeRowIndex(int rowIndex) {
-		if (rowIndex < 0) {
-			throw new InvalidTriangleException(
-					"Invalid row. It cannot be lower than 0");
-		}
-	}
-
-	private void assertIndexWithinRowIndex(int columnIndex, int rowIndex) {
-		int maximumIndexAllowedPerRow = rowIndex;
-		if (columnIndex > maximumIndexAllowedPerRow) {
-			StringBuffer sb = new StringBuffer();
-			sb.append("Invalid index ").append(columnIndex)
-					.append(" for the given row ").append(rowIndex)
-					.append(". Must equals or lower than ")
-					.append(maximumIndexAllowedPerRow);
-			throw new InvalidTriangleException(sb.toString());
-		}
-		if (columnIndex < 0) {
-			throw new InvalidTriangleException(
-					"Invalid index. It cannot be lower than 0");
-		}
+		return getExpectectedValue(parameters);
 	}
 
 	private void processRowUntilExpectedValueFound(
-			AlgorithmParameters parameters) {
+			HumanPyramidParameterWrapper parameters) {
 		for (parameters.currentColumnIndex = 0; parameters.currentColumnIndex < parameters.maxColumnIndex; parameters.currentColumnIndex++) {
-			parameters.addHalfWeightForCurrentRowColumnToLeftInNextRow();
-			if (parameters.isExpectedValueFound()) {
+			addHalfWeightForCurrentRowColumnToLeftInNextRow(parameters);
+			if (isExpectedValueFound(parameters)) {
 				return;
 			}
-			parameters.addHalfWeightForCurrentRowColumnToRightInNextRow();
+			addHalfWeightForCurrentRowColumnToRightInNextRow(parameters);
 		}
+	}
+
+	private void moveToNextRow(HumanPyramidParameterWrapper parameters) {
+		copyContent(parameters.nextPyramidRow, parameters.currentPyramidRow);
+		parameters.maxColumnIndex++;
+		initializeArrayToZero(parameters.nextPyramidRow);
+	}
+
+	private void copyContent(double[] source, double[] destination) {
+		for (int i = 0; i < destination.length; i++) {
+			destination[i] = source[i];
+		}
+	}
+
+	private void initializeArrayToZero(double[] array) {
+		for (int i = 0; i < array.length; i++) {
+			array[i] = 0;
+		}
+	}
+
+	private void addHalfWeightForCurrentRowColumnToLeftInNextRow(
+			HumanPyramidParameterWrapper parameters) {
+		double halfWeightToBeSupported = getWeightToBeSupportedForCurrentRowColumn(parameters) / 2;
+		double weightAlreadyBeingSupported = getWeightSupportedByLeftInNextRow(parameters);
+		parameters.nextPyramidRow[parameters.currentColumnIndex] = weightAlreadyBeingSupported
+				+ halfWeightToBeSupported;
+	}
+
+	private double getWeightToBeSupportedForCurrentRowColumn(
+			HumanPyramidParameterWrapper parameters) {
+		return parameters.currentPyramidRow[parameters.currentColumnIndex]
+				+ DEFAULT_WEIGHT;
+	}
+
+	private double getWeightSupportedByLeftInNextRow(
+			HumanPyramidParameterWrapper parameters) {
+		return parameters.nextPyramidRow[parameters.currentColumnIndex];
+	}
+
+	private void addHalfWeightForCurrentRowColumnToRightInNextRow(
+			HumanPyramidParameterWrapper parameters) {
+		double halfWeightToBeSupported = getWeightToBeSupportedForCurrentRowColumn(parameters) / 2;
+		double weightAlreadyBeingSupported = getWeightSupportedByRightInNextRow(parameters);
+		parameters.nextPyramidRow[parameters.currentColumnIndex + 1] = weightAlreadyBeingSupported
+				+ halfWeightToBeSupported;
+	}
+
+	private double getWeightSupportedByRightInNextRow(
+			HumanPyramidParameterWrapper parameters) {
+		return parameters.nextPyramidRow[parameters.currentColumnIndex + 1];
+	}
+
+	private boolean isExpectedValueFound(HumanPyramidParameterWrapper parameters) {
+		return parameters.expectedRowIndex == parameters.currenRowIndex
+				&& parameters.expectedColumnIndex == parameters.currentColumnIndex;
+	}
+
+	private double getExpectectedValue(HumanPyramidParameterWrapper parameters) {
+		return parameters.nextPyramidRow[parameters.currentColumnIndex];
 	}
 
 }

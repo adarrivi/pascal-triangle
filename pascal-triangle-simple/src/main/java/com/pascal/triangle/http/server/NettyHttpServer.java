@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import com.pascal.triangle.http.controller.HumanEdgeWeightController;
+import com.pascal.triangle.http.controller.HumanPyramidController;
 
 /**
  * Main server that will get started after the Spring application context is
@@ -35,7 +35,7 @@ public class NettyHttpServer {
 	// The controller will be instantiated ONLY once, and the same instance is
 	// going to be and used for all the requests, saving some memory
 	@Autowired
-	private HumanEdgeWeightController humanEdgeWeightController;
+	private HumanPyramidController humanPyramidController;
 
 	// Method invoked when the application context is loaded
 	@PostConstruct
@@ -56,7 +56,7 @@ public class NettyHttpServer {
 
 		// Set up the event pipeline factory.
 		bootstrap.setPipelineFactory(new NettyHttpServerPipelineFactory(
-				humanEdgeWeightController));
+				humanPyramidController));
 		return bootstrap;
 	}
 

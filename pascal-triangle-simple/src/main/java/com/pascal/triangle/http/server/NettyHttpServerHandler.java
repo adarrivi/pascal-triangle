@@ -13,8 +13,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.pascal.triangle.exception.InvalidHttpParameterException;
-import com.pascal.triangle.exception.InvalidTriangleException;
-import com.pascal.triangle.http.controller.HumanEdgeWeightController;
+import com.pascal.triangle.exception.InvalidPyramidException;
+import com.pascal.triangle.http.controller.HumanPyramidController;
 import com.pascal.triangle.http.util.HttpUtils;
 
 /**
@@ -30,9 +30,9 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 			.getLogger(NettyHttpServerHandler.class);
 
 	private MessageEvent messageEvent;
-	private HumanEdgeWeightController humanEdgeWeightController;
+	private HumanPyramidController humanEdgeWeightController;
 
-	public NettyHttpServerHandler(HumanEdgeWeightController controller) {
+	public NettyHttpServerHandler(HumanPyramidController controller) {
 		this.humanEdgeWeightController = controller;
 	}
 
@@ -41,6 +41,13 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 			MessageEvent messageEvent) throws Exception {
 		this.messageEvent = messageEvent;
 		delegateMessageToController();
+	}
+
+	@Override
+	public void exceptionCaught(ChannelHandlerContext ctx,
+			ExceptionEvent exceptionEvent) throws Exception {
+		LOG.error("Error found handling the request", exceptionEvent.getCause());
+		exceptionEvent.getChannel().close();
 	}
 
 	private void delegateMessageToController() {
@@ -58,7 +65,7 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 		try {
 			writeResponseInChannelAndClose(humanEdgeWeightController
 					.processRequest(queryStringDecoder.getParameters()));
-		} catch (InvalidTriangleException ex) {
+		} catch (InvalidPyramidException ex) {
 			LOG.error("Incorrect pyramid parameters", ex);
 			writeResponseInChannelAndClose(HttpUtils
 					.createInvalidInputParametersResponse(ex.getMessage()));
@@ -72,13 +79,6 @@ public class NettyHttpServerHandler extends SimpleChannelUpstreamHandler {
 	private void writeResponseInChannelAndClose(HttpResponse response) {
 		ChannelFuture future = messageEvent.getChannel().write(response);
 		future.addListener(ChannelFutureListener.CLOSE);
-	}
-
-	@Override
-	public void exceptionCaught(ChannelHandlerContext ctx,
-			ExceptionEvent exceptionEvent) throws Exception {
-		LOG.error("Error found handling the request", exceptionEvent.getCause());
-		exceptionEvent.getChannel().close();
 	}
 
 }

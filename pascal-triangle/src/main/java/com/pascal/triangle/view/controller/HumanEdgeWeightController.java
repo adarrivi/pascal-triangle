@@ -30,6 +30,26 @@ public class HumanEdgeWeightController implements HttpRequestController {
 	@Override
 	public HttpResponse processRequest(HttpRequest request,
 			Map<String, List<String>> parameters) {
+		int mb = 1024 * 1024;
+
+		// Getting the runtime reference from system
+		Runtime runtime = Runtime.getRuntime();
+
+		System.out.println("##### Heap utilization statistics [MB] #####");
+
+		// Print used memory
+		System.out.println("Used Memory:"
+				+ (runtime.totalMemory() - runtime.freeMemory()) / mb);
+
+		// Print free memory
+		System.out.println("Free Memory:" + runtime.freeMemory() / mb);
+
+		// Print total available memory
+		System.out.println("Total Memory:" + runtime.totalMemory() / mb);
+
+		// Print Maximum available memory
+		System.out.println("Max Memory:" + runtime.maxMemory() / mb);
+
 		Integer level = httpParameterVerifier
 				.getMandatoryIntegerParameterValue(LEVEL_INDEX_PARAMETER,
 						parameters);
@@ -39,7 +59,27 @@ public class HumanEdgeWeightController implements HttpRequestController {
 		String weight = humanPyramidService.getHumanWeightOverShoulders(level,
 				index);
 
-		return httpResponseFactory.createOkTextPlainResponse(weight);
+		HttpResponse createOkTextPlainResponse = httpResponseFactory
+				.createOkTextPlainResponse(weight);
+
+		// Getting the runtime reference from system
+		runtime = Runtime.getRuntime();
+
+		System.out.println("##### 2Heap utilization statistics [MB] #####");
+
+		// Print used memory
+		System.out.println("2Used Memory:"
+				+ (runtime.totalMemory() - runtime.freeMemory()) / mb);
+
+		// Print free memory
+		System.out.println("2Free Memory:" + runtime.freeMemory() / mb);
+
+		// Print total available memory
+		System.out.println("2Total Memory:" + runtime.totalMemory() / mb);
+
+		// Print Maximum available memory
+		System.out.println("2Max Memory:" + runtime.maxMemory() / mb);
+		return createOkTextPlainResponse;
 	}
 
 }
